@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components/macro";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { menuData } from "../data/MenuData";
 import { Button } from "./Button";
 import Bars from "../images/bars.svg";
@@ -71,8 +71,34 @@ const NavBtn = styled.div`
 `;
 
 const Navbar = ({ toggle }) => {
+  const [navbar, setNavbar] = useState(false);
+  const location = useLocation();
+
+  const changeBackground = () => {
+    if (window.pageYOffset > 60) {
+      setNavbar(true);
+    } else {
+      setNavbar(false);
+    }
+  };
+
+  useEffect(() => {
+    const watchScroll = () => {
+      window.addEventListener("scroll", changeBackground);
+    };
+    watchScroll();
+
+    return () => window.removeEventListener("scroll", changeBackground);
+  }, []);
+
+  let style = {
+    backgroundColor:
+      navbar || location.pathname !== "/" ? "#CD853F" : "transparent",
+    transition: "0.4s",
+  };
+
   return (
-    <Nav>
+    <Nav style={style}>
       <Logo to='/'>ELIXR</Logo>
       <MenuBars onClick={toggle} />
       <NavMenu>
